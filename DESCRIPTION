@@ -1,0 +1,13 @@
+Package: rgprof
+Type: Package
+Title: dynamical profiling of R native modules
+Version: 0.1
+Date: 2024-03-10
+Author: Red Plait
+Maintainer: Red Plait <redplait@gmail.com>
+Description: manage profiling of linux .so files
+        you need to patch gprof to see results.
+License: GPL (>= 2)
+Imports: Rcpp (>= 1.0.11)
+LinkingTo: Rcpp
+RoxygenNote: 7.3.1
