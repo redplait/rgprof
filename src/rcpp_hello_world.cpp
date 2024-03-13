@@ -16,6 +16,9 @@ void my_cb(const char *fname, void *data)
   cv->push_back(fname);
 }
 
+//' get list of loaded modules inside current process
+//'
+//'@return string vector of modules with full paths
 // [[Rcpp::export]]
 CharacterVector lsmod()
 {
@@ -25,6 +28,10 @@ CharacterVector lsmod()
   return res;
 }
 
+//' check if module can be profiles
+//'
+//'@param fname full path to module
+//'@return -1 if no such module or it is not ELF, 0 when module cannot be profiles, 1 if it was conpuled with -pg option, 2 fir -finstrument-functions option
 // [[Rcpp::export]]
 int checkmod(std::string fname)
 {
@@ -36,6 +43,9 @@ int checkmod(std::string fname)
   return 0;
 }
 
+//'Suspend or resume prifing. Actually this is just wrapper on (undocumented) function moncontrol
+//'
+//'@param v 0 to suspend, 1 to resume
 // [[Rcpp::export]]
 void control(int v)
 {
@@ -48,6 +58,9 @@ static int s_profiled = 0;
 static void **s_patch_addr = nullptr;
 static void *s_old_val = nullptr;
 
+//'Stop profiling. results will be saved in current directory in file gmon.base_address_of_module.PID
+//'
+//'@return 0 when no profiling happened, 1 otherwise
 // [[Rcpp::export]]
 int prof_stop()
 {
@@ -63,6 +76,10 @@ int prof_stop()
   return 1;
 }
 
+//'Start profiling of some module
+//'
+//'@param fname full path to module
+//'@return -1 if no such module or it is not ELF, 0 when module cannot be profiles, 1 if it was conpuled with -pg option, 2 fir -finstrument-functions option
 // [[Rcpp::export]]
 int prof_start(std::string fname)
 {
@@ -83,10 +100,11 @@ int prof_start(std::string fname)
     warning("Warning: module %s is not loaded", ld.name);
     return 0;
   }
-  // check if we can profile it
+  // check if we can profile this module
   struct prof_data pd;
   int res = process_elf(fname.c_str(), &pd);
   if ( res < 0 ) return 0;
+  // -pg
   if ( pd.m_mcount )
   {
     sprintf(s_prefix, "gmon.%p", ld.base);
@@ -95,6 +113,7 @@ int prof_start(std::string fname)
     return 1;
   }
   if ( !pd.m_func_enter ) return 0;
+  // -finstrument-functions
   sprintf(s_prefix, "gmon.%p", (void *)ld.base);
   s_patch_addr = (void **)(ld.base + pd.m_func_enter);
   s_old_val = *s_patch_addr;
