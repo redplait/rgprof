@@ -19,7 +19,7 @@ static const struct segment_flag_table_t
 static int
 callback(struct dl_phdr_info *info, size_t size, void *data)
 {
-   printf("name=%s addr %p (%d segments)\n", info->dlpi_name, info->dlpi_addr, info->dlpi_phnum);
+   printf("name=%s addr %p (%d segments)\n", info->dlpi_name, (void *)info->dlpi_addr, info->dlpi_phnum);
 
    for (int j = 0; j < info->dlpi_phnum; j++)
          printf("\t\t header %2d: address=%10p size %ld %s\n", j,

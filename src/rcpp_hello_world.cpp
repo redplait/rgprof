@@ -43,7 +43,7 @@ int checkmod(std::string fname)
   return 0;
 }
 
-//'Suspend or resume prifing. Actually this is just wrapper on (undocumented) function moncontrol
+//'Suspend or resume profiling. Actually this is just wrapper on (undocumented) function moncontrol
 //'
 //'@param v 0 to suspend, 1 to resume
 // [[Rcpp::export]]
