@@ -2,7 +2,7 @@
 % Please edit documentation in R/RcppExports.R
 \name{control}
 \alias{control}
-\title{Suspend or resume prifing. Actually this is just wrapper on (undocumented) function moncontrol}
+\title{Suspend or resume profiling. Actually this is just wrapper on (undocumented) function moncontrol}
 \usage{
 control(v)
 }
@@ -10,5 +10,5 @@ control(v)
 \item{v}{0 to suspend, 1 to resume}
 }
 \description{
-Suspend or resume prifing. Actually this is just wrapper on (undocumented) function moncontrol
+Suspend or resume profiling. Actually this is just wrapper on (undocumented) function moncontrol
 }

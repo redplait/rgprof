@@ -3,18 +3,16 @@
 \alias{rgprof}
 \docType{package}
 \title{
-  A short title line describing what the package does
+  Package for shared libraries profiling
 }
 \description{
-  A more detailed description of what the package does. A length
-  of about one to five lines is recommended.
+  You can dynamically start and stop profiling many times for different libraries. Profiled package should be compiled with -pg or -finstrument-functions options 
 }
 \details{
-  This section should provide a more detailed overview of how to use the
-  package, including the most important functions.
+  See \href{http://redplait.blogspot.com/2024/03/profiling-shared-libraries-on-linux.html}(details)
 }
 \author{
-Red Plait, email optional.
+Red Plait.
 
 Maintainer: Red Plait <redplait@gmail.com>
 }
@@ -28,7 +26,10 @@ Maintainer: Red Plait <redplait@gmail.com>
 }
 \examples{
   \dontrun{
-     ## Optional simple examples of the most important functions
-     ## These can be in \dontrun{} and \donttest{} blocks.   
+   library(rgprof)
+   rgprof::lsmod()
+   rgprog::prof_start(full_path_of_so)
+   ...
+   rgprog::prof_stop()
   }
 }

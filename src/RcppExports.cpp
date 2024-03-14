@@ -20,13 +20,24 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// lsmodr
+CharacterVector lsmodr(std::string& re);
+RcppExport SEXP _rgprof_lsmodr(SEXP reSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string& >::type re(reSEXP);
+    rcpp_result_gen = Rcpp::wrap(lsmodr(re));
+    return rcpp_result_gen;
+END_RCPP
+}
 // checkmod
-int checkmod(std::string fname);
+int checkmod(std::string& fname);
 RcppExport SEXP _rgprof_checkmod(SEXP fnameSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< std::string >::type fname(fnameSEXP);
+    Rcpp::traits::input_parameter< std::string& >::type fname(fnameSEXP);
     rcpp_result_gen = Rcpp::wrap(checkmod(fname));
     return rcpp_result_gen;
 END_RCPP
@@ -65,6 +76,7 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_rgprof_lsmod", (DL_FUNC) &_rgprof_lsmod, 0},
+    {"_rgprof_lsmodr", (DL_FUNC) &_rgprof_lsmodr, 1},
     {"_rgprof_checkmod", (DL_FUNC) &_rgprof_checkmod, 1},
     {"_rgprof_control", (DL_FUNC) &_rgprof_control, 1},
     {"_rgprof_prof_stop", (DL_FUNC) &_rgprof_prof_stop, 0},

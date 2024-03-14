@@ -1,4 +1,5 @@
 #include <Rcpp.h>
+#include <regex>
 #include "lditer.h"
 #include "eread.h"
 using namespace Rcpp;
@@ -28,12 +29,42 @@ CharacterVector lsmod()
   return res;
 }
 
+struct rdata
+{
+  CharacterVector *cv;
+  std::regex *re;
+};
+
+void my_rcb(const char *fname, void *data)
+{
+  rdata *rd = (rdata *)data;
+  if ( std::regex_search(fname, *rd->re) )
+   rd->cv->push_back(fname);
+}
+
+//' get list of loaded modules inside current process matching regex
+//'
+//'@param re regex
+//'@return string vector of modules with full paths
+// [[Rcpp::export]]
+CharacterVector lsmodr(std::string &re)
+{
+  CharacterVector res;
+  rdata rd;
+  rd.cv = &res;
+  rd.re = new std::regex(re, std::regex_constants::ECMAScript);
+  ld_cbdata cb { my_rcb, &rd };
+  ld_iter2( &cb );
+  delete rd.re;
+  return res;
+}
+
 //' check if module can be profiles
 //'
 //'@param fname full path to module
 //'@return -1 if no such module or it is not ELF, 0 when module cannot be profiles, 1 if it was conpuled with -pg option, 2 fir -finstrument-functions option
 // [[Rcpp::export]]
-int checkmod(std::string fname)
+int checkmod(std::string &fname)
 {
   struct prof_data pd;
   int res = process_elf(fname.c_str(), &pd);
