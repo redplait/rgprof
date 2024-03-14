@@ -9,3 +9,5 @@ rgprog::prof_start(full_path_of_so)
 ...
 rgprog::prof_stop()
 ```
+
+Profiled package should be compiled with -pg or -finstrument-functions options (for example you can add then in [Makevars](https://rstudio.github.io/r-manuals/r-admin/Add-on-packages.html#customizing-package-compilation) file). Currently only aarch64 & x86_64 are supported
