@@ -9,7 +9,7 @@
   You can dynamically start and stop profiling many times for different libraries. Profiled package should be compiled with -pg or -finstrument-functions options 
 }
 \details{
-  See \href{http://redplait.blogspot.com/2024/03/profiling-shared-libraries-on-linux.html}(details)
+  See \href{http://redplait.blogspot.com/2024/03/profiling-shared-libraries-on-linux.html}{details}
 }
 \author{
 Red Plait.
