@@ -33,17 +33,19 @@ struct fcont
 {
   CharacterVector *names, *base;
   NumericVector *size;
+  std::regex *re;
 };
 
 void my_cbf(const char *fname, void *base, size_t size, void *data)
 {
-  char buf[40];
-  fcont *fc = (fcont *)data;
   if ( !base ) return;
+  fcont *fc = (fcont *)data;
+  if ( fc->re && !std::regex_search(fname, *fc->re) ) return;
   if ( fname )
     fc->names->push_back(fname);
   else
     fc->names->push_back("");
+  char buf[40];
   snprintf(buf, sizeof(buf) - 1, "%p", base);
   buf[39] = 0;
   fc->base->push_back(buf);
@@ -58,9 +60,26 @@ DataFrame lsmodf()
 {
   CharacterVector names, base;
   NumericVector size;
-  fcont tmp{ &names, &base, &size };
+  fcont tmp{ &names, &base, &size, nullptr };
   ld_fcbdata fc { my_cbf, &tmp };
   ld_fiter(&fc);
+  return DataFrame::create(Named("path") = names,
+    Named("base") = base, Named("size") = size);
+}
+
+//' get frame of loaded modules inside current process matching regex
+//'
+//'@param re regex
+//'@return frame consisted of modules full paths, base address and size
+// [[Rcpp::export]]
+DataFrame lsmodfr(std::string &re)
+{
+  CharacterVector names, base;
+  NumericVector size;
+  fcont tmp{ &names, &base, &size, new std::regex(re, std::regex_constants::ECMAScript) };
+  ld_fcbdata fc { my_cbf, &tmp };
+  ld_fiter(&fc);
+  delete tmp.re;
   return DataFrame::create(Named("path") = names,
     Named("base") = base, Named("size") = size);
 }

@@ -8,6 +8,21 @@ lsmod <- function() {
     .Call(`_rgprof_lsmod`)
 }
 
+#' get frame of loaded modules inside current process
+#'
+#'@return frame consisted of modules full paths, base address and size
+lsmodf <- function() {
+    .Call(`_rgprof_lsmodf`)
+}
+
+#' get frame of loaded modules inside current process matching regex
+#'
+#'@param re regex
+#'@return frame consisted of modules full paths, base address and size
+lsmodfr <- function(re) {
+    .Call(`_rgprof_lsmodfr`, re)
+}
+
 #' get list of loaded modules inside current process matching regex
 #'
 #'@param re regex
