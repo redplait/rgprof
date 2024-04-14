@@ -29,6 +29,42 @@ CharacterVector lsmod()
   return res;
 }
 
+struct fcont
+{
+  CharacterVector *names, *base;
+  NumericVector *size;
+};
+
+void my_cbf(const char *fname, void *base, size_t size, void *data)
+{
+  char buf[40];
+  fcont *fc = (fcont *)data;
+  if ( !base ) return;
+  if ( fname )
+    fc->names->push_back(fname);
+  else
+    fc->names->push_back("");
+  snprintf(buf, sizeof(buf) - 1, "%p", base);
+  buf[39] = 0;
+  fc->base->push_back(buf);
+  fc->size->push_back((double)size);
+}
+
+//' get frame of loaded modules inside current process
+//'
+//'@return frame consisted of modules full paths, base address and size
+// [[Rcpp::export]]
+DataFrame lsmodf()
+{
+  CharacterVector names, base;
+  NumericVector size;
+  fcont tmp{ &names, &base, &size };
+  ld_fcbdata fc { my_cbf, &tmp };
+  ld_fiter(&fc);
+  return DataFrame::create(Named("path") = names,
+    Named("base") = base, Named("size") = size);
+}
+
 struct rdata
 {
   CharacterVector *cv;

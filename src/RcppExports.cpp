@@ -20,6 +20,16 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// lsmodf
+DataFrame lsmodf();
+RcppExport SEXP _rgprof_lsmodf() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(lsmodf());
+    return rcpp_result_gen;
+END_RCPP
+}
 // lsmodr
 CharacterVector lsmodr(std::string& re);
 RcppExport SEXP _rgprof_lsmodr(SEXP reSEXP) {
@@ -76,6 +86,7 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_rgprof_lsmod", (DL_FUNC) &_rgprof_lsmod, 0},
+    {"_rgprof_lsmodf", (DL_FUNC) &_rgprof_lsmodf, 0},
     {"_rgprof_lsmodr", (DL_FUNC) &_rgprof_lsmodr, 1},
     {"_rgprof_checkmod", (DL_FUNC) &_rgprof_checkmod, 1},
     {"_rgprof_control", (DL_FUNC) &_rgprof_control, 1},

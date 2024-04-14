@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <algorithm>
 #include "lditer.h"
 
 static const struct segment_flag_table_t
@@ -86,4 +87,26 @@ static int cb3(struct dl_phdr_info *info, size_t size, void *data)
 void ld_iter2(ld_cbdata *ld)
 {
   dl_iterate_phdr(cb3, ld);
+}
+
+static int cb_f(struct dl_phdr_info *info, size_t size, void *data)
+{
+  ld_fcbdata *ld = (ld_fcbdata *)data;
+  if ( info->dlpi_name )
+  {
+    // iterate on dlpi_phdr to find size of module
+    size_t curr = 0;
+    for (int j = 0; j < info->dlpi_phnum; j++ )
+    {
+      size_t end = info->dlpi_phdr[j].p_vaddr + info->dlpi_phdr[j].p_memsz;
+      curr = std::max(curr, end);
+    }
+    ld->cb( info->dlpi_name, (void *)info->dlpi_addr, curr, ld->cb_data );
+  }
+  return 0;
+}
+
+void ld_fiter(struct ld_fcbdata *ld)
+{
+  dl_iterate_phdr(cb_f, ld);
 }
